@@ -1,11 +1,23 @@
 package samannin.TransmissionOptimizer;
 
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Driver {
-	public static void main(String args[]){
+    int numToKeep=100;
+    int minGearSize = 10;
+    int maxGearSize = 200;
+    ArrayList<Solution> solutionList = new ArrayList<Solution>();
+
+    public static void main(String args[]){
 		Driver temp = new Driver();
 		temp.run();
 	}
 	public void run(){
+
+
+
+
 		//System.out.println(solveForSun(60,.2857142857,20,1,20,0));
 		//System.out.println(solveForCarrier(40,.25,12,0,16,1));
 		//System.out.println(solveForRing(80,0,24,-.33333333333,32,1));
@@ -35,6 +47,15 @@ public class Driver {
         System.out.println(get6thGR(s1,s2,s3));
 
     }
+
+    public Set generateRandomSet(){
+        Gear planetGear = new Gear(ThreadLocalRandom.current().nextInt(minGearSize, maxGearSize + 1));
+        Gear sunGear = new Gear(ThreadLocalRandom.current().nextInt((int) planetGear.getTeeth(), maxGearSize + 1));
+        Gear ringGear = new Gear(sunGear.getTeeth()+(2*planetGear.getTeeth()));
+
+        return new Set(ringGear,planetGear,sunGear);
+    }
+
 	public double solveForSun(double ringTeeth, double ringSpeed, double planetTeeth, double carrierSpeed, double sunTeeth, double sunSpeed){
 		double n = sunTeeth/planetTeeth;
 		sunSpeed = -((2+n)*ringSpeed-2*(1+n)*carrierSpeed)/n;

@@ -2,6 +2,7 @@ package samannin.TransmissionOptimizer;
 
 /**
  * Created by Shadow on 3/27/2017.
+ * Represents a set of gears that make up a planetary gear set.
  */
 public class Set {
 

@@ -1,5 +1,9 @@
 package samannin.TransmissionOptimizer;
 
+/*
+    represnets a gear (either ring, sun, or planets)
+ */
+
 public class Gear {
 
 
