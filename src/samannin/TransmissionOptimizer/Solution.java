@@ -8,6 +8,9 @@ public class Solution {
     Set s1;
     Set s2;
     Set s3;
+
+
+
     double score;
 
     public Solution(Set s1, Set s2, Set s3){
@@ -18,6 +21,10 @@ public class Solution {
 
     public void setScore(double score){
         this.score = score;
+    }
+
+    public double getScore() {
+        return score;
     }
 
     public Set getS1() {
@@ -33,7 +40,7 @@ public class Solution {
     }
 
     public String toString(){
-        return ""+score+","+s1.getSunGear().getTeeth()+","+s1.getPlanetGear().getTeeth()+","+s2.getSunGear().getTeeth()+","+s2.getPlanetGear().getTeeth()+","+s3.getSunGear().getTeeth()+","+s3.getPlanetGear().getTeeth();
+        return "Score: "+score+"\t S1: "+s1.getSunGear().getTeeth()+"\t P1: "+s1.getPlanetGear().getTeeth()+"\t S2:"+s2.getSunGear().getTeeth()+"\t P2:"+s2.getPlanetGear().getTeeth()+"\t S3:"+s3.getSunGear().getTeeth()+"\t P3:"+s3.getPlanetGear().getTeeth();
     }
 
 }

@@ -5,9 +5,11 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Driver {
     int numToKeep=100;
+    double worstScore;
     int minGearSize = 10;
     int maxGearSize = 200;
     ArrayList<Solution> solutionList = new ArrayList<Solution>();
+    double targetRatios[] = new double[7];
 
     public static void main(String args[]){
 		Driver temp = new Driver();
@@ -15,10 +17,18 @@ public class Driver {
 	}
 	public void run(){
 
+        targetRatios[0]=0;
+        targetRatios[1]=3.1;
+        targetRatios[2]=1.81;
+        targetRatios[3]=1.41;
+        targetRatios[4]=1;
+        targetRatios[5]=0.71;
+        targetRatios[6]=0.61;
+
+        worstScore = 100;
 
 
-
-		//System.out.println(solveForSun(60,.2857142857,20,1,20,0));
+        //System.out.println(solveForSun(60,.2857142857,20,1,20,0));
 		//System.out.println(solveForCarrier(40,.25,12,0,16,1));
 		//System.out.println(solveForRing(80,0,24,-.33333333333,32,1));
 		Gear ringGear1 = new Gear(80);
@@ -45,6 +55,13 @@ public class Driver {
         System.out.println(get4thGR(s1,s2,s3));
         System.out.println(get5thGR(s1,s2,s3));
         System.out.println(get6thGR(s1,s2,s3));
+
+        for (int i=0;i<10000000;i++){
+            Solution sol = new Solution(generateRandomSet(),generateRandomSet(),generateRandomSet());
+            addToBestScores(sol);
+        }
+
+        System.out.println(solutionListToString());
 
     }
 
@@ -78,6 +95,9 @@ public class Driver {
         s3.solvePlanetGear();
         return 1/s3.getPlanetGear().getRPM();
 	}
+    public static double get1stGR(Solution sol){
+        return get1stGR(sol.getS1(),sol.getS2(),sol.getS3());
+    }
 
 	public static double get2ndGR(Set s1, Set s2, Set s3){
         s2.getRingGear().setRPM(0);
@@ -88,6 +108,9 @@ public class Driver {
         s3.solvePlanetGear();
         return 1/s3.getPlanetGear().getRPM();
 	}
+    public static double get2ndGR(Solution sol){
+        return get2ndGR(sol.getS1(),sol.getS2(),sol.getS3());
+    }
 
     public static double get3rdGR(Set s1, Set s2, Set s3){
         s1.getRingGear().setRPM(0);
@@ -104,6 +127,9 @@ public class Driver {
 
         return 1/s3.getPlanetGear().getRPM();
     }
+    public static double get3rdGR(Solution sol){
+        return get3rdGR(sol.getS1(),sol.getS2(),sol.getS3());
+    }
 
     public static double get4thGR(Set s1, Set s2, Set s3){
         s3.getRingGear().setRPM(1);
@@ -111,6 +137,9 @@ public class Driver {
         s3.solvePlanetGear();
 
         return s3.getPlanetGear().getRPM();
+    }
+    public static double get4thGR(Solution sol){
+        return get4thGR(sol.getS1(),sol.getS2(),sol.getS3());
     }
 
     public static double get5thGR(Set s1, Set s2, Set s3){
@@ -128,6 +157,9 @@ public class Driver {
 
         return 1/s3.getPlanetGear().getRPM();
     }
+    public static double get5thGR(Solution sol){
+        return get5thGR(sol.getS1(),sol.getS2(),sol.getS3());
+    }
 
     public static double get6thGR(Set s1, Set s2, Set s3){
         s2.getRingGear().setRPM(0);
@@ -139,6 +171,52 @@ public class Driver {
         s3.solvePlanetGear();
 
         return 1/s3.getPlanetGear().getRPM();
+    }
+    public static double get6thGR(Solution sol){
+        return get6thGR(sol.getS1(),sol.getS2(),sol.getS3());
+    }
+
+    private void addToBestScores(Solution sol){
+        double score = evaluateSolution(sol,targetRatios);
+        if (score < worstScore){
+            int i = 0;
+            for (i=i;i<solutionList.size();i++){
+                Solution test = solutionList.get(i);
+                if (score<test.getScore()){
+                    break;
+                }
+            }
+            solutionList.add(i,sol);
+            if (solutionList.size()>numToKeep){
+                try{
+                    solutionList.remove(numToKeep+1);
+                }
+                catch (Exception E){
+                    E.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private double evaluateSolution(Solution sol, double targetRatios[]){
+        double score =0;
+
+        score += Math.abs(targetRatios[1]-get1stGR(sol));
+        score += Math.abs(targetRatios[2]-get2ndGR(sol));
+        score += Math.abs(targetRatios[3]-get3rdGR(sol));
+        score += Math.abs(targetRatios[4]-get4thGR(sol));
+        score += Math.abs(targetRatios[5]-get5thGR(sol));
+        score += Math.abs(targetRatios[6]-get6thGR(sol));
+        sol.setScore(score);
+        return score;
+    }
+
+    private String solutionListToString(){
+        StringBuilder sb = new StringBuilder();
+        for(Solution s:solutionList){
+            sb.append(""+ s.toString()+"\n");
+        }
+        return sb.toString();
     }
 
 }
